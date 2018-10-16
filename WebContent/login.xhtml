@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html
+ xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<h:form>
+		<p:growl id="growl"  life="3000"  />
+		<p:panel id="login" header="#{lang['login']}" style="width:450px;margin-left: auto;margin-right: auto;top:200px;position:relative;">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputLabel for="username" value="#{lang['user_name']}:" />
+				<p:inputText id="username" value="#{login.user.username}"
+					required="true" label="username" />
+				<h:outputLabel for="password" value="#{lang['password']}:" />
+				<h:panelGrid columns="1" cellpadding="0">
+				<p:password id="password" value="#{login.user.password}"
+					required="true" label="password" />
+	               <p:commandLink value="#{lang['forget_your_password']}"   onclick="PF('dlg1').show();"/> 
+	               
+	               </h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="1" cellpadding="0">
+			
+			
+			
+			
+			<p:commandButton  value="#{lang['sign_in']}" update="growl"
+				action="#{login.login}" />
+    		<p:link  value="#{lang['no_account']} " outcome="subscribe"/>
+			</h:panelGrid>
+			
+		</p:panel>
+	
+
+	</h:form>
+		<p:dialog  modal="true"  widgetVar="dlg1"  width="50%"  height="250" >
+	 <h:form  id="form" >
+    <h1> #{lang['retreive_login_information']}</h1>
+    <h:panelGrid columns="1" cellpadding="5">
+   <h:outputText value="." />
+    <h:panelGrid columns="1"  cellpadding="0">
+     <h:panelGrid columns="2"  cellpadding="0">
+    <p:inputText id="email"  value="#{userMB.user.email}"  size="35" placeholder="Your Email Here" required="true" validator="#{userMB.findUserByEmail}" requiredMessage="#{lang['email_required']}" />
+     <p:commandButton value="#{lang['submit']}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  update="msgEmail" style=" left:40%;" actionListener="#{userMB.forgetPassword}" oncomplete="if (!args.validationFailed) rc();"/>
+   
+       </h:panelGrid >
+         <p:message id="msgEmail"  for="email" style="width:100px;position:relative"  />
+         </h:panelGrid>
+</h:panelGrid>
+ <p:remoteCommand name="rc"  action="/Presets/successEmailSend?faces-redirect=true"/>
+</h:form>
+</p:dialog>
+	
+</h:body>
+</html>

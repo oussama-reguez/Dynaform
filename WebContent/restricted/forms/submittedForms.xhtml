@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsp/jstl/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+  <c:metadata>
+       <c:viewParam name="search" value="#{search.txt}"/>
+       
+    </c:metadata>
+<h:head>
+<h:outputStylesheet  >
+.ui-icon-myCancel{
+  background-image: url("image/user/default.jpg") !important;
+    border-style: groove!important;}
+    .btnCreate {
+    background-image: url("image/user/default.jpg") !important;
+    width: 26px;
+    height: 26px;
+    background-position: 0px 0px;
+}
+</h:outputStylesheet>
+</h:head>
+<ui:include src="/Presets/menu.xhtml"/>
+
+  
+<h:form id="form" >  
+<h:panelGrid rendered="#{viewSubmittedForms.subforms.size()==0}" columns="1" width="100%">
+  <p:separator />
+<h1 style="text-align:center;margin-left:auto;margin-right:auto;color:#999999;"> #{lang['no_sub_forms']}</h1>
+ <p:link style=" left:45%;color:#999999;position:relative" outcome="/main" value="#{lang['back_to_main_page']} "/>
+  <p:separator />
+</h:panelGrid>
+<p:dataTable id="table" var="subform" value="#{viewSubmittedForms.subforms}" rendered="#{viewSubmittedForms.subforms.size()!=0}">
+        <c:facet name="header">
+           #{lang['submitted_forms']}
+        </c:facet>
+       
+        <p:column headerText="Form">
+            <p:graphicImage value="#{subform.form.form_picture}" styleClass="formPicture"  /> 
+        <h:outputText value="#{subform.form.name}"   styleClass="formNamee"/>
+        </p:column>
+        <p:column headerText="#{lang['created_by']}">
+            <h:outputText value="#{subform.user.username}" />
+        </p:column>
+        <p:column headerText="#{lang['submission_date']} ">
+            <h:outputText value="#{subform.date}" >
+             <c:convertDateTime pattern="d-M-yyyy" />
+            </h:outputText>
+        </p:column>
+        <p:column style="width:50px;text-align: center" headerText="#{lang['actions']}">
+             <p:commandButton  update=":form:dialog"     oncomplete="PF('dlg1').show();" icon="ui-icon-document-b" title="View">
+                <c:setPropertyActionListener  value="#{subform.values}" target="#{viewSubmittedForms.values}" />
+            </p:commandButton>
+        </p:column>
+        
+    </p:dataTable>
+ 
+<p:dialog id="dialog"  widgetVar="dlg1" minHeight="600" header="#{viewSubmittedForms.selectedSubforms.form.name}">
+
+  <h:form  >  
+  <ui:repeat value="#{viewSubmittedForms.values}"  var="value">
+  <h:panelGrid columns="2" layout="grid" cellpadding="10" >
+  <h:outputText value="#{lang['question']}:" />
+    <h:outputText value="#{value.input.title}" />
+    <h:outputText value="#{lang['answer']}:" />
+    <h:outputText value="#{value.value}" />
+  
+   </h:panelGrid>
+ </ui:repeat>
+   </h:form>
+</p:dialog>
+</h:form>
+
+</html>

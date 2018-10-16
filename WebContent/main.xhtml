@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+   xmlns:f="http://xmlns.jcp.org/jsf/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+<h:head>
+   <c:metadata>
+	<f:viewAction action="#{login.welcomeUser}" />
+</c:metadata>
+<h:outputStylesheet  >
+.ui-menubutton .ui-icon{
+  background: url("../images/user/oussama.jpg")!important;
+  
+ margin-top: -15px!important;
+   margin-bottom: 50px!important;
+    border-style: groove!important;}
+</h:outputStylesheet>
+
+
+</h:head>
+
+<ui:include src="Presets/menu.xhtml"/>
+<h:form > 
+ <p:growl id="growl"  life="3000"  showDetail="true" />
+<h:panelGrid columns="3" border="0"  style="width:600px; margin-left: auto;
+    margin-right: auto;">
+   <c:facet name="header">
+ <p:graphicImage  value="resources/images/logo2.jpg" />
+</c:facet>
+
+    <p:autoComplete placeholder="#{lang['place_holder']}"  size="40"  style="margin-left:50px;" id="acSimple" value="#{search.txt}" completeMethod="#{search.completeText}" />
+   <p:selectOneMenu id="console" value="#{search.searchType}" >
+            <c:selectItem itemLabel="#{lang['form_label']}" itemValue="Form Name" />
+            <c:selectItem itemLabel="#{lang['user_label']}" itemValue="User Name" />
+       
+        </p:selectOneMenu>
+ <p:commandButton value="#{lang['search_button']}"  action="search?faces-redirect=true&amp;includeViewParams=true">  </p:commandButton>
+</h:panelGrid>
+<p:remoteCommand name="welcome" update="growl" />
+</h:form>
+
+</html>

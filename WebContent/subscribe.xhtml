@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsp/jstl/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+<h:head>
+<h:outputStylesheet library="css" name="style.css"/>
+<script>
+ function change() {
+
+$("#txtUsername").val($('input[name=console]:checked', '#form').val());
+
+
+   rc();
+
+}
+</script>
+</h:head>
+
+
+
+ 
+<h:form prependId="false" id="form">
+<p:toolbar style="margin-bottom: 1cm;">
+  <c:facet name="left">
+    <p:graphicImage  value="resources/images/tt.png" ></p:graphicImage>  
+    </c:facet>
+  </p:toolbar>
+<p:panelGrid columns="1" layout="grid" styleClass="regPanel" >      
+
+
+<h:panelGrid columns="2" >
+<h:outputLabel  for="firstName" value=" #{lang['first_name']}" styleClass="bold" />
+<h:outputLabel  for="lastName" value=" #{lang['last_name']}" styleClass="bold" />
+ <p:inputText  id="firstName"  value="#{userMB.user.firstName}" required="true" requiredMessage=" #{lang['name_required']} " validator="#{userMB.validateName}">
+  <p:ajax  update="msgFirstName" /> 
+ </p:inputText>
+ <p:inputText  id="lastName"   value="#{userMB.user.lastName}" required="true" requiredMessage=" #{lang['last_name_required']} "  validator="#{userMB.validateName}">
+  <p:ajax  update="msgLastName" /> 
+ </p:inputText>
+   <p:message id="msgFirstName" for="firstName"/>
+   <p:message id="msgLastName" for="lastName"/>
+ 
+ </h:panelGrid>
+ <h:panelGrid columns="1" cellpadding="5"> 
+ <h:outputLabel  for="gender" value=" #{lang['gender']}"  styleClass="bold"/>
+ <p:selectOneMenu id="gender" value="#{userMB.user.gender}" style="width:125px">
+            <c:selectItem itemLabel=" #{lang['male']}" itemValue="Male" />
+            <c:selectItem itemLabel=" #{lang['female']}" itemValue="Female" />
+
+        </p:selectOneMenu>
+ 
+ <h:outputLabel  for="birth" value=" #{lang['birth_date']}"  styleClass="bold" />
+
+<p:calendar  id="birth" yearRange="c-100:c-10" navigator="true" value="#{userMB.user.birthDate}"  required="true" requiredMessage="#{lang['birth_required']}"  >
+  <p:ajax  update="msgBirth" /> 
+  </p:calendar>
+ <p:message id="msgBirth" for="birth"/>
+ <h:outputLabel  for="txtUsername" value=" #{lang['user_name']}"  styleClass="bold"/>
+  <p:inputText id="txtUsername" 
+                   value="#{userMB.user.username}"
+                   required="true"
+                   requiredMessage=" #{lang['user_name_required']}"
+                   validator="#{userMB.validateUserName}">
+                    <p:ajax  event="change" update="txtUsername,msgUsername,choose" /> 
+ </p:inputText>
+        <p:message id="msgUsername" for="txtUsername"/>
+        <h:panelGrid id="choose" rendered="#{userMB.generatedUserNames!=null}">
+       
+       <p:selectOneRadio layout="grid" columns="1" id="console"  value="#{userMB.selectedName}"  onchange="change()"   style="width:125px">
+            <c:selectItems value="#{userMB.generatedUserNames}" />
+          
+        
+    </p:selectOneRadio>
+      </h:panelGrid>
+
+ <h:outputLabel for="password" value="#{lang['password']}" styleClass="bold" />
+  
+         <p:password id="password"  feedback="true" inline="true" value="#{userMB.user.password}" match="password2" validatorMessage="#{lang['match_password']}" required="true" requiredMessage="#{lang['password_required']}" /> 
+       <p:message id="msgPassword" for="password"/>
+          <h:outputLabel for="password2" value="#{lang['retype_password']}"  styleClass="bold" />
+  
+           <p:password id="password2" required="true" requiredMessage="#{lang['retype_required']}">
+          
+           </p:password> 
+            <p:message id="msgPassword2" for="password2"/>
+          <h:outputLabel for="email" value="#{lang['email']}" styleClass="bold" />
+  
+          <p:inputText id="email"  required="true"   value="#{userMB.user.email}"   validator= "#{userMB.validateEmail}" requiredMessage="#{lang['email_required']}"
+		
+		 > 
+        <p:ajax update="msgEmail"/>  
+          
+          </p:inputText>
+          <p:message id="msgEmail" for="email"/>
+            <h:outputLabel for="email" value="#{lang['captcha']}" styleClass="bold" />
+        
+          <p:captcha id="captcha"  validatorMessage="#{lang['match_captcha']}" required="true" requiredMessage="#{lang['captcha_required']}" language="#{userMB.getUserLanguage()}" />
+           <p:message id="msgCaptcha" for="captcha"/>
+         </h:panelGrid>
+<p:commandButton value="#{lang['create_account']}"   action="#{userMB.createAccount}" update="msgCaptcha,msgEmail,msgPassword,msgPassword2,msgUsername,msgLastName,msgFirstName,msgBirth" > </p:commandButton>
+
+ <p:remoteCommand name="rc"  update="txtUsername,msgUsername,choose" />
+</p:panelGrid>
+</h:form>
+</html>

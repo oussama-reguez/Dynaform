@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html 
+   xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+   xmlns:f="http://xmlns.jcp.org/jsf/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+<c:metadata>
+	<f:viewAction action="#{build.initNewForm}" />
+</c:metadata>
+<h:head>
+
+
+
+</h:head>
+	
+<ui:include src="/Presets/menu.xhtml"/>
+<h:outputStylesheet library="css" name="style.css" />
+<h:panelGroup id="dynaFormGroup">
+    <p:messages id="messages" showSummary="true"/>
+
+   <h:form  id="form">
+  
+ <p:ribbon >
+    <p:tab title="#{lang['form']}">
+        <p:ribbonGroup >
+        <p:commandButton value="#{lang['new']}"  action="#{build.clear}"  update="@form" icon="ui-ribbonicon-new" styleClass="ui-ribbon-bigbutton" immediate="true"/>
+        <p:commandButton   action="#{build.submit}" value="#{lang['save']}"   oncomplete="if (args.validationFailed) PF('dlg2').show();"  update="@form" icon="ui-ribbonicon-save" styleClass="ui-ribbon-bigbutton"   />
+         
+        </p:ribbonGroup>
+        <p:ribbonGroup >
+        <p:outputLabel for="name" value="#{lang['form_name']}" />
+    <p:inputText   id ="name" value="#{build.form.name}" >   
+    <p:ajax  event="blur" update="name"  />  
+    </p:inputText>
+     </p:ribbonGroup>
+      <p:ribbonGroup label="#{lang['form_picture']}">
+       <h:panelGrid   columns="4" cellpadding="5">
+       <p:graphicImage value="#{build.form.form_picture}" id="image" style="border-style: groove; height: 64px;width:64px;" />
+ <p:commandButton id="imageBtn" value="Basic" type="button" />
+    <p:overlayPanel   showCloseIcon="true"  widgetVar="chartPanelWidget" id="imagePanel" for="imageBtn" hideEffect="fade" style="margin-left:0px;margin-right:0px; height:200px;">
+
+    <p:fileUpload  style=" height:200px;"  mode="advanced" dragDropSupport="false" fileUploadListener="#{build.upload}" 
+           update="messages,image"  fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+         
+ 
+    <p:growl id="messages" showDetail="true" />
+
+    </p:overlayPanel>
+    
+    
+</h:panelGrid>
+      
+
+      </p:ribbonGroup>
+  
+        </p:tab>
+        </p:ribbon>
+  <ui:repeat id="table" var="input" value="#{build.inputs}"   step="1" offset="0">     
+<h:panelGrid columns="1">
+<h:panelGrid columns="2">
+<p:panel  id="tes" style="margin-top:30px;width:600px;" header="#{lang['input']} #{input.order}"  >
+   <p:commandButton style="height:15px!important;width:15px!important; left:550px;top:-50px;" icon="ui-icon-close" actionListener="#{build.delete}" update="@form"  immediate="true"> 
+    <c:attribute name="selectedRow" value="#{input.order}" />
+    </p:commandButton>
+  
+   
+   <h:outputText value=" #{lang['question']} " />
+
+    <p:inputText  size="20" id ="title" value="#{input.title}" required="true"  requiredMessage="#{lang['empty_question']} ">     
+   <p:ajax  event="blur" update="title"  />  
+    </p:inputText>  
+  
+ <p:selectOneMenu  style="left:50px;top:8px;" id = "test" value="#{input.type.idType}" required="false"  >  
+          
+   <c:attribute name="selectedRow" value="#{input.order}" />
+                <c:selectItems  value="#{build.choices}" var ="f" itemLabel="#{f.type}" itemValue="#{f.idType}">
+                 
+                </c:selectItems>  
+   
+     <p:ajax event="change"  update="tes"  listener="#{build.valueChangeMethod}"  /> 
+     
+     </p:selectOneMenu>
+     <p:separator  style="opacity: 0.5;" rendered="#{input.type.idType==102 || input.type.idType==104 ||input.type.idType==105 }" />
+                       
+   <h:panelGrid rendered="#{input.type.idType==101 }" styleClass="textQuestionPanel">
+
+<h:outputText value="#{lang['short_answer']}"   style="left:25px ;position:relative;  ">
+    
+</h:outputText>
+   </h:panelGrid>
+  
+    <h:panelGrid rendered="#{input.type.idType==103 }" styleClass="paragraphQuestionPanel">
+   <h:outputText value="#{lang['long_answer']}"   style="left:80px; ;position:relative;  "
+   >  </h:outputText>
+
+</h:panelGrid>
+  <p:graphicImage  value="/resources/icons/date.png"  style="width:160px;height:109px;margin-top:10px;opacity:0.8;"  rendered="#{input.type.idType==106}"/>
+                       <ui:repeat id="tab" var="list" value="#{input.listValues}"  rendered="#{input.type.idType==102 || input.type.idType==104 ||input.type.idType==105 }">
+                      
+                      
+                    <h:panelGrid columns="4" style="margin-left:-18px;">
+                    <p:graphicImage  value="/resources/icons/radiobutton.png"  style="width:31px;height:31px;"  rendered="#{input.type.idType==105}"/>
+                       <p:graphicImage  value="/resources/icons/list.png"  style="width:31px;height:31px;"  rendered="#{input.type.idType==102}"/>
+                       <p:inputText id ="list" value="#{list.value}" required="true" requiredMessage="value field is empty "> 
+                      <p:ajax  event="blur" update="list"   />  
+                       </p:inputText>
+                       
+                      <p:commandButton   id ="kkk" update="@form"  actionListener="#{build.addValueList}" icon="ui-icon-plus"   immediate="true">
+                       <c:attribute name="selectedRow" value="#{input.order}" />
+                       </p:commandButton>
+                      <p:message for="list"> </p:message>
+                     </h:panelGrid>
+ 
+                       </ui:repeat>
+
+</p:panel>
+<p:message for="title" >  </p:message>
+</h:panelGrid>
+<p:splitButton value="#{lang['add_input']}" actionListener="#{build.addInput}"  immediate="true"  update="@form">
+ <c:attribute name="selectedRow" value="#{input.order}" />
+        <p:menuitem value="#{lang['add_text']}" actionListener="#{build.addText}" update="@form" icon="ui-icon-arrowrefresh-1-w"  immediate="true">
+    <c:attribute name="selectedRow" value="#{input.order}" />
+        </p:menuitem>
+          <p:menuitem value="#{lang['add_paragraph']}" actionListener="#{build.addParagraph}" immediate="true" update="@form" icon="ui-icon-arrowrefresh-1-w" >
+    <c:attribute name="selectedRow" value="#{input.order}" />
+        </p:menuitem>
+        
+         <p:menuitem value="#{lang['add_date']}" actionListener="#{build.addDate}" immediate="true" update="@form" icon="ui-icon-close" >
+        
+          <c:attribute name="selectedRow" value="#{input.order}" />
+          </p:menuitem>
+    
+      <p:menuitem value="#{lang['add_list']}" actionListener="#{build.addList}"  immediate="true" update="@form"  icon="ui-icon-close" >
+        
+          <c:attribute name="selectedRow" value="#{input.order}" />
+          </p:menuitem>
+    
+        <p:menuitem value="#{lang['add_radio_boxes']}" immediate="true" actionListener="#{build.addRadio}" update="@form" icon="ui-icon-close" >
+        
+          <c:attribute name="selectedRow" value="#{input.order}" />
+          </p:menuitem>
+           
+           
+          
+        
+    </p:splitButton>
+</h:panelGrid>
+
+ </ui:repeat>
+    
+    
+   
+
+<p:dialog  modal="true" header="MESSAGE" widgetVar="dlg2"   >
+   <h:panelGrid columns="1" cellpadding="10">
+    <h:outputText value="#{lang['empty_questions']}" />
+     <p:commandButton value="show" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"  onclick="PF('dlg2').hide()" style=" left:40%;"/>
+</h:panelGrid>
+</p:dialog>
+    
+   <p:commandButton value="try" actionListener="#{build.validateForm}">  </p:commandButton>
+   
+    
+     <p:commandButton value="update"    update="@form">  </p:commandButton>
+   <p:remoteCommand name="rc"  actionListener="#{build.te}"/>
+
+ <p:dialog  modal="true" header="MESSAGE" widgetVar="dlg1"  >
+    <h:panelGrid columns="1" cellpadding="10">
+   <h:outputText value="#{lang['empty_form']}" />
+     <p:commandButton value="ok" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" onclick="PF('dlg1').hide()" style=" left:40%;"/>
+</h:panelGrid>
+</p:dialog>
+ <p:remoteCommand  name="redirect" actionListener="#{build.redirect}"/>
+<p:dialog  modal="true" header="MESSAGE" widgetVar="dlg3"  onHide="redirect()" >
+ <h:panelGrid columns="2" cellpadding="10">
+            <p:graphicImage value="/resources/icons/success.png"  style="width:135px;height:114px;" />
+            <h:outputText
+                value=" #{lang['success_form_creation']}" style="font-size:20px;"/>
+         <p:spacer width="20"/>   <p:button value="ok" outcome="viewForms"/>
+        </h:panelGrid>
+</p:dialog>
+ </h:form>
+ 
+ 
+</h:panelGroup>
+</html>

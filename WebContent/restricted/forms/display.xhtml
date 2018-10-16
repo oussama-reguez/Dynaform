@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html 
+   xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+   xmlns:f="http://xmlns.jcp.org/jsf/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+<c:metadata>
+	<f:viewAction action="#{displayForm.initDisplay}" />
+</c:metadata>
+<h:head>
+<h:outputStylesheet library="css" name="style.css"/>
+
+<h:outputScript library="js" name="language.js"/> 
+</h:head>
+
+
+	<h:body style="background-color:#BBBBBB;">
+<c:metadata>
+     
+       
+    </c:metadata>
+
+
+   <h:form  id="form" >
+  <h:panelGrid  styleClass="formPanel"> 
+ 
+  <div class="formNamePanel">  
+     
+<p class="formName"> #{displayForm.form.name} </p>
+
+</div>
+   <ui:repeat var="value" value="#{displayForm.values}">
+   
+
+<h:panelGrid columns="1"  cellpadding="5" > 
+<h:outputText value="#{value.input.title}"  styleClass="question required"     /> 
+<h:panelGrid columns="2" > 
+<p:inputText id="text"   style=" margin-top:-60px!important;" rendered="#{value.input.type.idType==101}" value="#{value.value}"    required="true"  requiredMessage="#{lang['required_value']}" />
+  <p:message   id="msgText" for="text" />
+</h:panelGrid>
+<h:panelGrid columns="1"  style=" margin-top:-20px!important;"> 
+<p:selectOneRadio   id="radio"  rendered="#{value.input.type.idType==105}" value="#{value.value}" columns="1" layout="grid"  required="true" requiredMessage="#{lang['required_value']}" >
+    
+         <c:selectItems value="#{value.input.listValues}"  var="value"  itemLabel="#{value.value}" itemValue="#{value.value}" />
+           
+        
+        </p:selectOneRadio>
+   <p:message  id="msgRadio" for="radio" />
+   </h:panelGrid>
+    <h:panelGrid columns="2"  style=" margin-top:-20px!important;" > 
+        <p:calendar  style=" margin-top:-10px;"  required="true" id="date" rendered="#{value.input.type.idType==106}" value="#{value.value}"  pattern="dd-MMM-yyyy"   requiredMessage="#{lang['required_value']}" >
+      <c:convertDateTime pattern="dd-MMM-yyyy"/>
+        </p:calendar>
+      <p:message id="msgDate"  for="date" />
+   </h:panelGrid>
+     <p:selectOneMenu    style=" margin-top:-60px!important;"   id="menu" rendered="#{value.input.type.idType==102}"  value="#{value.value}"  required="true"  >
+            <c:selectItems  value="#{value.input.listValues}"   />
+            <p:message  id="msgMenu" for="menu" />
+        </p:selectOneMenu>
+        <h:panelGrid columns="1"  style=" margin-top:-10px!important;"> 
+    <p:inputTextarea    style=" margin-top:-10px;"  id="parapgraph" required="true"  requiredMessage="#{lang['required_value']}" rows="6" cols="33"  rendered="#{value.input.type.idType==103}" value="#{value.value}" />
+  <p:message  id="msgParagraph"  for="parapgraph" />
+</h:panelGrid>
+</h:panelGrid>
+</ui:repeat>
+<p:commandButton value="#{lang['submit_form']}" action="#{displayForm.submit}"  update="@form" >
+<c:param name="form_id" value="#{displayForm.form.idForm}"> </c:param>
+</p:commandButton>
+<p:separator  style="margin-bottom:-6px ;opacity: 0.5;" />
+ <h:panelGrid columns="2">
+ <h:outputLabel value="#{lang['provider']}" style="margin:0;font-size:10px;opacity: 0.8;"> </h:outputLabel>
+
+ <h:outputLabel value="#{lang['creator']} #{displayForm.form.user.username}"  style="opacity: 0.8;" > </h:outputLabel>
+
+ <p:graphicImage  value="/resources/images/tt.png"  style="margin-top:-6px;width:108px;height:21px;"/>
+ </h:panelGrid>
+</h:panelGrid>
+</h:form>
+
+
+
+
+
+
+
+</h:body>
+
+
+
+</html>

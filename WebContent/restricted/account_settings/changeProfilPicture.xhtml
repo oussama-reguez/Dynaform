@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+   xmlns:f="http://xmlns.jcp.org/jsf/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+
+<h:head>
+<h:outputStylesheet>
+.reg-headline-container {
+    position: absolute;
+    top: 130px;
+    left: 380px;
+    float: left;
+    z-index: 1;
+ background-color:blue;
+}
+
+</h:outputStylesheet>
+
+
+</h:head>
+
+
+<h:body>
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" resizable="true" size="100"
+			minSize="40" maxSize="200">
+			<ui:include src="/Presets/menu.xhtml" />
+		</p:layoutUnit>
+
+		<p:layoutUnit position="west">
+				<ui:include src="/Presets/accountMenu.xhtml"/>
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+		
+		
+				<ui:include src="/Presets/menu.xhtml"/>
+	
+		</p:layoutUnit>
+
+		<p:layoutUnit position="center">
+	      <h2> #{lang['change_profil_picture']}</h2>	
+			<h:form enctype="multipart/form-data">
+			<h:panelGrid>
+    <p:growl id="growl" showDetail="true" />
+ 
+    <p:fileUpload  fileUploadListener="#{userMB.handleFileUpload}" mode="advanced"  cancelLabel="#{lang['cancel_label']}"  invalidSizeMessage="#{lang['invalid_size']}" invalidFileMessage="#{lang['invalid_file']}" requiredMessage="#{lang['required_user_picture']}"  required="true" uploadLabel="#{lang['upload_label']}"
+           update="growl"  fileLimit="3" allowTypes="/(\.|\/)(jpe?g|png)$/" multiple="true"  />
+ <p:commandButton value="#{lang['change_picture']}"  actionListener="#{userMB.changeUserPicture}" update="growl"   />
+   </h:panelGrid>
+</h:form>
+			
+         
+        
+
+				
+		
+		</p:layoutUnit>
+	</p:layout>
+</h:body>
+  
+
+
+
+
+
+
+
+</html>

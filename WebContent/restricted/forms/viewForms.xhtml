@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsp/jstl/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+  
+<h:head>
+
+</h:head>
+<ui:include src="/Presets/menu.xhtml"/>
+<h:form id="form" >  
+
+
+<h:panelGrid rendered="#{viewForms.forms.size()==0}" columns="1" width="100%">
+  <p:separator />
+<h1 style="text-align:center;margin-left:auto;margin-right:auto;color:#999999;"> #{lang['no_form']}</h1>
+ <p:link style=" left:45%;color:#999999;position:relative" outcome="build" value="create a new Form"/>
+  <p:separator />
+</h:panelGrid>
+<p:dataTable id="table" var="form"   value="#{viewForms.forms}" rendered="#{viewForms.forms.size()!=0}">
+        <c:facet name="header">
+           #{lang['forms']}
+        </c:facet>
+       
+        <p:column headerText="#{lang['form']}">
+           
+        <p:graphicImage value="#{form.form_picture}" styleClass="formPicture"  /> 
+        <h:outputText value="#{form.name}"   styleClass="formNamee"/>
+   
+       
+        </p:column>
+        
+        <p:column headerText="#{lang['creation_date']} ">
+            <h:outputText value="#{form.creationDate}" >
+            <c:convertDateTime pattern="d-M-yyyy" />
+            </h:outputText>
+        </p:column>
+         <p:column headerText="#{lang['last_modification_date']} ">
+            <h:outputText value="#{form.modifiedDate}" >
+             <c:convertDateTime pattern="d-M-yyyy" />
+             </h:outputText>
+        </p:column>
+        <p:column headerText="#{lang['actions']}" style="width:200px;text-align: center;border:1px;">
+  <p:button  icon="ui-icon-document"   outcome="viewSubmissions">
+   <c:param name="form_id" value="#{form.idForm}" />
+ </p:button>
+<p:button  icon="ui-icon-image " outcome="formStatestic" >
+  <c:param name="form_id" value="#{form.idForm}" />
+ </p:button>
+  <p:button  icon="ui-icon-wrench"  outcome="editForm">
+  <c:param name="form_id" value="#{form.idForm}" />
+  </p:button>
+   <p:commandButton  icon="ui-icon-close"  actionListener="#{viewForms.deleteForm}" update="@form">
+    <p:confirm header="Confirmation" message="#{lang['delete_message']}" icon="ui-icon-alert" />
+    <c:attribute name="selectedForm" value="#{form}"></c:attribute>
+    </p:commandButton>
+ 
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+        <p:commandButton value="#{lang['yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        <p:commandButton value="#{lang['no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    </p:confirmDialog>
+  
+     
+    
+        </p:column>
+        
+    </p:dataTable>
+ 
+ 
+</h:form>
+
+</html>

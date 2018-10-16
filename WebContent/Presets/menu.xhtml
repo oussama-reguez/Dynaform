@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://java.sun.com/jsp/jstl/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+<h:head>
+<c:view locale="#{login.locale}"/>
+
+
+<h:outputStylesheet library="css" name="style.css" />
+<h:outputStylesheet  rendered="#{login.status==true}"   >
+
+.ui-menubutton .ui-button-text{
+ margin-right: -20 px!important;
+}
+.ui-menubutton .ui-icon{
+  background: url("/formm/faces/#{login.user.user_picture}")!important;
+ 
+         height:32px!important;
+    width:32px!important;
+     margin-left: -5px!important;
+   margin-top: -16px!important;
+   margin-bottom: 50px!important;
+    border-width: 0.1px;
+    border-style: solid ;
+    border-radius :0; 
+
+    }
+       
+  
+</h:outputStylesheet>
+
+</h:head>
+<c:metadata>
+       <c:viewParam name="search" value="#{search.txt}"/>
+       
+    </c:metadata>
+
+
+   <h:form  >
+<p:toolbar style="margin-bottom: 1cm;">
+    <c:facet name="left">
+        <p:commandButton type="button" id="menu" value="#{lang['menu']}" iconPos="right" icon="ui-icon-menu"/>
+        
+    </c:facet>
+ 
+    <c:facet name="right">
+    <p:remoteCommand name="test"   action="/search?faces-redirect=true&amp;includeViewParams=true">
+     
+    </p:remoteCommand>
+        <p:autoComplete id="acSimple" value="#{search.txt}" style="margin-right:5px;" completeMethod="#{search.completeText}" placeholder="#{lang['search_place_holder']}" onkeypress="if (event.keyCode == 13) { test(); return false; }"/>
+            <p:button value="#{lang['sign_in']}"  icon="ui-icon-extlink" outcome="/login"  rendered="#{login.status==false}"  
+ />
+  
+ <p:menuButton value="#{login.user.username}"    rendered="#{login.status==true}"  >
+        <p:menuitem value="#{lang['logout']}" action="#{login.logout}"  icon="ui-icon-power"/>
+       
+        <p:separator />
+        <p:menuitem value="#{lang['profil_settings']}"      icon="ui-icon-person" outcome="/restricted/account_settings/manageAccount"/>
+    </p:menuButton>
+ 
+    </c:facet>
+</p:toolbar>
+ <p:menu overlay="true" trigger="menu"  my="left top" at="left bottom">
+        
+        <p:submenu label="#{lang['form']}">
+            <p:menuitem value="#{lang['create_form']}"  icon="ui-icon-triangle-1-e" outcome="/restricted/forms/build"/>
+            <p:menuitem value="#{lang['manage_forms']}"  icon="ui-icon-triangle-1-e"  outcome="/restricted/forms/viewForms"/>
+        </p:submenu>
+         <p:submenu label="#{lang['submitted_forms']}" >
+            <p:menuitem value="#{lang['view_submitted_forms']}"  icon="ui-icon-triangle-1-e"  outcome="/restricted/forms/submittedForms"/>
+        </p:submenu>
+    </p:menu>
+
+
+ </h:form>
+
+
+</html>

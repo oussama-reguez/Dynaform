@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html 
+   xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+   xmlns:f="http://xmlns.jcp.org/jsf/core"
+     xmlns:c="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+     xmlns:ui="http://java.sun.com/jsf/facelets"
+  >
+<c:metadata>
+	<f:viewAction action="#{statForm.initStat}" />
+</c:metadata>
+<h:head>
+<h:outputStylesheet  >
+.ui-menubutton .ui-icon{
+  background: url("../images/user/oussama.jpg")!important;
+  
+ margin-top: -15px!important;
+   margin-bottom: 50px!important;
+    border-style: groove!important;}
+</h:outputStylesheet>
+
+
+</h:head>
+
+
+	
+<c:metadata>
+       <c:viewParam name="search" value="#{search.txt}"/>
+       
+    </c:metadata>
+
+<ui:include src="/Presets/menu.xhtml"/>
+<h:form id="form">
+             
+   
+
+  
+    <p:tabView >
+        <p:tab title="#{lang['general']}" >
+            <h:panelGrid style="width:100%;"  columns="1" cellpadding="10">
+            <h:outputText value="#{lang['nbr_submissions']}  #{statForm.nbrSubmissions}"/>
+            <h:outputText value="#{lang['avg_age']}  #{statForm.avgAge} "/>
+            <p:chart type="bar" model="#{statForm.ageBarModel}" style="width:400px;height:300px" />
+            <p:chart type="line" model="#{statForm.dateModel}" style="height:400px;" />
+            </h:panelGrid>
+        </p:tab>
+        <p:tab title="#{lang['inputs']}" >
+       
+        <ui:repeat value="#{statForm.inputs}" var="input" render="#{statForm.inputs!=null}" >
+        <h:panelGrid columns="1" style="width:60%;" cellpadding="10">
+        <p:dataList value="#{input.values}"  rendered="#{input.type.idType==101}"  style="width:25px;" var="value" type="unordered" itemType="none" paginator="true" rows="4" styleClass="paginated">
+        <c:facet name="header" >
+           <h:outputText value="#{input.title}" />
+        </c:facet>
+         
+            <h:outputText value="#{value.value}" />
+            </p:dataList>
+            
+             <p:dataList value="#{input.values}"   rendered="#{input.type.idType==103}" style="width:25px;" var="text" type="unordered" itemType="none" paginator="true" rows="1" styleClass="paginated">
+        <c:facet name="header" >
+           <h:outputText value="#{input.title}" />
+        </c:facet>
+         
+           <p:inputTextarea rows="6" cols="33"  value="#{text.value}"  readonly="true"/>
+            </p:dataList>
+            </h:panelGrid>
+          </ui:repeat>
+        
+        <ui:repeat var="dateModel" value="#{statForm.dateModels}">
+           
+           <p:chart type="line" model="#{dateModel}"  style="height:400px;"  />
+</ui:repeat>
+  
+   <ui:repeat var="pieModel" value="#{statForm.pieModels}">
+<p:chart type="pie" model="#{pieModel}" style="width:400px;height:300px" />
+</ui:repeat>
+ 
+    
+                
+        </p:tab>
+        </p:tabView>
+        </h:form>
+        
+
+
+
+
+
+
+
+
+
+
+
+</html>
